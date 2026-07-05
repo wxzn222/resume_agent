@@ -1,0 +1,10 @@
+name: resume-agent
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - openai
+    - python-dotenv
+    - pydantic
+    - pytest
+    - gradio

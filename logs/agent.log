@@ -1,0 +1,28 @@
+2026-07-05 04:13:54,857 HTTP Request: POST http://127.0.0.1:11434/chat/completions "HTTP/1.1 404 Not Found"
+2026-07-05 04:19:13,330 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 404 Not Found"
+2026-07-05 04:19:44,492 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 404 Not Found"
+2026-07-05 04:44:49,813 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-05 04:46:16,448 HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-07-05 04:46:16,550 HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-07-05 04:46:17,167 HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-07-05 04:54:15,863 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-05 04:58:15,677 HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-07-05 04:58:15,712 HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-07-05 04:58:16,431 HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-07-05 05:03:18,814 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-05 05:04:55,179 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-05 05:04:55,182 {'tip': 'okok', 'tool1': 'finish', 'tool2': 'finish'}
+2026-07-05 05:24:20,812 Retrying request to /chat/completions in 0.442752 seconds
+2026-07-05 05:24:21,271 Retrying request to /chat/completions in 0.969527 seconds
+2026-07-05 05:27:48,760 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-05 05:28:38,995 HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-07-05 05:28:39,033 HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-07-05 05:28:39,782 HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-07-05 05:31:54,389 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-05 05:33:22,752 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-05 05:33:44,602 HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-07-05 05:33:44,634 HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-07-05 05:33:45,649 HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-07-05 05:35:03,999 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-05 05:35:12,820 HTTP Request: POST http://127.0.0.1:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-05 05:35:12,821 {'tip': 'okok', 'tool1': 'finish', 'tool2': 'finish'}
