@@ -5,6 +5,5 @@ dependencies:
   - pip:
     - openai
     - python-dotenv
-    - pydantic
     - pytest
-    - gradio
+    - "gradio>=6,<7"

@@ -1,0 +1,12 @@
+# Personal resume inputs and generated output
+resume.txt
+jd.txt
+result.txt
+result.txt.tmp
+
+# Local configuration and runtime artifacts
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+logs/

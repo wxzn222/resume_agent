@@ -1,62 +1,103 @@
-import gradio as gr
-from src.agent import ResumeAgent
-import logging
+"""Automatic command-line entry point for the resume optimizer."""
 
-logging.basicConfig(level=logging.INFO)
+from __future__ import annotations
+
+import logging
+import sys
+from pathlib import Path
+from typing import Any
+
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from src.agent import ResumeAgent, format_result_document, write_result
+
+
 logger = logging.getLogger(__name__)
 
-agent = ResumeAgent()
 
-def run_analyze(resume, jd):
-    """Gradio调用的入口函数，必须返回字符串"""
+def project_root() -> Path:
+    return Path(__file__).resolve().parent.parent
+
+
+def _error_result(code: str, message: str) -> dict[str, Any]:
+    return {
+        "error": {"code": code, "message": message},
+        "warnings": [],
+        "summary": f"分析未执行：{message}。",
+    }
+
+
+def _write_and_print(root: Path, result: dict[str, Any]) -> bool:
+    document = format_result_document(result)
+    print(document)
     try:
-        logger.info("收到分析请求")
-        result = agent.analyze(resume, jd)
-        logger.info(f"返回结果长度: {len(result)}")
-        return result
-    except Exception as e:
-        logger.error(f"run_analyze 异常: {e}")
-        return f"分析过程发生错误：{str(e)}"
+        write_result(root / "result.txt", result)
+        return True
+    except OSError as exc:
+        logger.error("result.txt 写入失败：%s", type(exc).__name__)
+        return False
 
-with gr.Blocks(title="Resume Optimizer") as demo:
-    gr.Markdown("# 📄 简历岗位匹配分析工具")
-    gr.Markdown("输入简历内容和岗位JD，AI将自动分析匹配度并给出优化建议")
-    
-    with gr.Row():
-        with gr.Column(scale=1):
-            resume_input = gr.Textbox(
-                label="📝 简历内容", 
-                lines=8, 
-                placeholder="请粘贴你的简历文本..."
-            )
-        with gr.Column(scale=1):
-            output_result = gr.Textbox(
-                label="📊 分析结果", 
-                lines=8, 
-                interactive=False
-            )
-    
-    jd_input = gr.Textbox(
-        label="💼 岗位JD要求", 
-        lines=4, 
-        placeholder="请粘贴目标岗位的职位描述..."
-    )
-    
-    with gr.Row():
-        submit_btn = gr.Button("🚀 开始分析", variant="primary")
-        clear_btn = gr.ClearButton([resume_input, jd_input, output_result])
-    
-    # 正确的绑定方式：click 返回输出
-    submit_btn.click(
-        fn=run_analyze, 
-        inputs=[resume_input, jd_input], 
-        outputs=[output_result]
-    )
+
+def run_from_files(
+    root: Path | None = None,
+    agent: ResumeAgent | None = None,
+) -> tuple[int, dict[str, Any]]:
+    """Read root-level inputs, run all stages, and export the result."""
+
+    base = Path(root).resolve() if root is not None else project_root()
+    resume_path = base / "resume.txt"
+    jd_path = base / "jd.txt"
+
+    missing = [
+        path.name for path in (resume_path, jd_path) if not path.is_file()
+    ]
+    if missing:
+        result = _error_result(
+            "INPUT_FILE_MISSING",
+            f"缺少输入文件：{'、'.join(missing)}",
+        )
+        written = _write_and_print(base, result)
+        return (2 if written else 3), result
+
+    try:
+        resume = resume_path.read_text(encoding="utf-8")
+        jd = jd_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        result = _error_result(
+            "INPUT_FILE_READ_ERROR",
+            f"输入文件读取失败：{type(exc).__name__}",
+        )
+        written = _write_and_print(base, result)
+        return (2 if written else 3), result
+
+    empty = [
+        name
+        for name, content in (("resume.txt", resume), ("jd.txt", jd))
+        if not content.strip()
+    ]
+    if empty:
+        result = _error_result(
+            "INPUT_FILE_EMPTY",
+            f"输入文件内容为空：{'、'.join(empty)}",
+        )
+        written = _write_and_print(base, result)
+        return (2 if written else 3), result
+
+    runner = agent or ResumeAgent()
+    result = runner.run(resume, jd)
+    written = _write_and_print(base, result)
+    if not written:
+        return 3, result
+    return (2 if "error" in result else 0), result
+
+
+def main() -> int:
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    exit_code, _ = run_from_files()
+    return exit_code
+
 
 if __name__ == "__main__":
-    logger.info("启动Gradio服务: http://127.0.0.1:7860")
-    demo.launch(
-        server_name="127.0.0.1", 
-        server_port=7860,
-        share=False
-    )
+    raise SystemExit(main())
